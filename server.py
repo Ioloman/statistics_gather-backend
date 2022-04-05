@@ -3,13 +3,23 @@ from databases import Database
 from tornado.ioloop import IOLoop
 import tornado.web
 from tornado.httpserver import HTTPServer
+from app.receive_handler import ReceiveHandler
+from app.main_handler import MainPageHandler
 
 
 
 def make_app(database: Database):
     # pass connection to each handler
     return tornado.web.Application([
-
+        tornado.web.url(
+            r'/', tornado.web.RedirectHandler, {'url': '/api'}
+        ),
+        tornado.web.url(
+            r'/api', MainPageHandler, name='main'
+        ),
+        tornado.web.url(
+            r'/api/send_data', ReceiveHandler, {'connection': database.connection()}, name='send_data'
+        )
     ])
 
 
