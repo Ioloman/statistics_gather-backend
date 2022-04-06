@@ -5,6 +5,7 @@ import tornado.web
 from tornado.httpserver import HTTPServer
 from app.receive_handler import ReceiveHandler
 from app.main_handler import MainPageHandler
+from dotenv import load_dotenv
 
 
 
@@ -36,4 +37,5 @@ def main():
 
 
 if __name__ == '__main__':
+    load_dotenv('.env')
     main()

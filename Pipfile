@@ -8,6 +8,8 @@ tornado = "*"
 databases = {extras = ["aiomysql"], version = "*"}
 aiomysql = "*"
 cryptography = "*"
+python-dotenv = "*"
+requests = "*"
 
 [dev-packages]
 
