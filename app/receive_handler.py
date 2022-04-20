@@ -26,7 +26,6 @@ def validate_json(json_: bytes) -> bool:
 
 class ReceiveHandler(BaseHandler):
     async def post(self):
-        print("Hello post ReceiveHandler")
         # validate json
         if not validate_json(self.request.body):
             raise HTTPError(400)
@@ -36,7 +35,6 @@ class ReceiveHandler(BaseHandler):
         async with self.connection:
             if (source_id := await queries.get_data_source_id(self.connection, data['device_name'])) is None:
                 source_id = await queries.add_data_source(self.connection, data['device_name'])
-        print("source_id: ", source_id)
         # restructure data
         parsed_data = {}
         for frame in data['time_series']:
@@ -45,7 +43,6 @@ class ReceiveHandler(BaseHandler):
                     parsed_data[field] = []
                 parsed_data[field].append({'value': value, 'date': frame['date']})
 
-        print("parsed_data: ", parsed_data)
         # add data to the database
         async with self.connection:
             for field, records in parsed_data.items():
@@ -53,7 +50,6 @@ class ReceiveHandler(BaseHandler):
                 if (field_id := await queries.get_field_id(self.connection, field, source_id)) is None:
                     field_id = await queries.add_field(self.connection, field, source_id)
                 # insert data
-                print(records)
                 await queries.add_records(self.connection, field_id, records)
 
         self.write(json.dumps({'status': 'success'}))
