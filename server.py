@@ -26,7 +26,9 @@ def make_app(database: Database):
 
 def main():
     # create database object and connect
-    database = Database(os.getenv('DATABASE_URL'))
+    mysql_url = os.getenv('DATABASE_URL')
+    print(mysql_url)
+    database = Database(mysql_url)
     IOLoop.current().run_sync(lambda: database.connect())
     # create app and run server
     app = make_app(database)
